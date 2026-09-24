@@ -59,6 +59,9 @@ class ListeSynchro(CustomView, TemplateView):
 
                 lignes.append({"individu": individu, "erreur": False, "introuvable": False, "nb_diff": nb_diff, "champs": champs})
 
+            # Fait remonter les individus non à jour (champs différents à synchroniser) en haut de la liste
+            lignes.sort(key=lambda ligne: 0 if ligne["nb_diff"] > 0 else 1)
+
         context['lignes'] = lignes
         return context
 
