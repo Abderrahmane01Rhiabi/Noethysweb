@@ -1179,6 +1179,7 @@ class ImporterEnMasseEnt(CustomView, TemplateView):
         context["eleves"] = eleves
         context["nb_masques_ecole_inconnue"] = nb_masques_ecole_inconnue
         context["nb_a_importer"] = sum(1 for e in eleves if not e["deja_importe"])
+        context["nb_deja_importes"] = len(eleves) - context["nb_a_importer"]
         return context
 
     def get(self, request, *args, **kwargs):

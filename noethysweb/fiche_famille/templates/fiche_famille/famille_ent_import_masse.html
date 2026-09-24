@@ -54,6 +54,12 @@
                 </label>
             </div>
 
+            <div class="btn-group mb-3" role="group" id="filtre_statut">
+                <button type="button" class="btn btn-outline-secondary active" data-filtre="tous">Tous ({{ eleves|length }})</button>
+                <button type="button" class="btn btn-outline-secondary" data-filtre="a_importer">À importer ({{ nb_a_importer }})</button>
+                <button type="button" class="btn btn-outline-secondary" data-filtre="deja_importe">Déjà importés ({{ nb_deja_importes }})</button>
+            </div>
+
             <table class="table table-bordered table-sm">
                 <thead class="thead-light">
                     <tr>
@@ -66,7 +72,7 @@
                 </thead>
                 <tbody>
                     {% for eleve in eleves %}
-                    <tr>
+                    <tr data-statut="{% if eleve.deja_importe %}deja_importe{% else %}a_importer{% endif %}">
                         <td class="text-center">
                             {% if not eleve.deja_importe %}
                                 <input type="checkbox" name="eleves_ent_id" value="{{ eleve.id }}" class="case_eleve">
@@ -116,6 +122,17 @@
 
             document.querySelectorAll('.case_eleve').forEach(function(cb) {
                 cb.addEventListener('change', Maj_bouton_import_masse);
+            });
+
+            document.querySelectorAll('#filtre_statut button').forEach(function(bouton) {
+                bouton.addEventListener('click', function() {
+                    document.querySelectorAll('#filtre_statut button').forEach(function(b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    var filtre = this.dataset.filtre;
+                    document.querySelectorAll('tbody tr').forEach(function(ligne) {
+                        ligne.style.display = (filtre === 'tous' || ligne.dataset.statut === filtre) ? '' : 'none';
+                    });
+                });
             });
         </script>
     {% elif not erreur_connexion %}
